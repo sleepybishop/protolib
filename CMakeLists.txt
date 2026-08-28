@@ -216,11 +216,13 @@ list(APPEND COMMON_SOURCE_FILES
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/include )
 
 # Setup platform dependent libraries, defines, source file and compiler flags
-if(MSVC)
+if(WIN32)
 	list(APPEND PLATFORM_LIBS ws2_32 iphlpapi user32 gdi32 Advapi32 ntdll)
-	list(APPEND PLATFORM_DEFINITIONS _CRT_SECURE_NO_WARNINGS)
 	list(APPEND PLATFORM_SOURCE_FILES src/win32/win32Net.cpp src/win32/win32RouteMgr.cpp)
-	list(APPEND PLATFORM_FLAGS /EHsc)
+	if(MSVC)
+		list(APPEND PLATFORM_DEFINITIONS _CRT_SECURE_NO_WARNINGS)
+		list(APPEND PLATFORM_FLAGS /EHsc)
+	endif()
 elseif(UNIX)
 	list(APPEND PLATFORM_DEFINITIONS UNIX _FILE_OFFSET_BITS=64)
 	list(APPEND PLATFORM_SOURCE_FILES 	src/unix/unixNet.cpp 
@@ -325,5 +327,4 @@ if(PROTOKIT_BUILD_EXAMPLES)
 		include_directories(${CMAKE_SOURCE_DIR}/include)
 	endforeach()
 endif()
-
 
